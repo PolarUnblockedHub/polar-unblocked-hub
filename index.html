@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unblocked Games Hub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
+    header {
+      background-color: #2d2d2d;
+      padding: 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    #game-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .game-card {
+      background-color: #2d2d2d;
+      border-radius: 8px;
+      margin: 1rem;
+      width: 200px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+    .game-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+    .game-card h3 {
+      margin: 0;
+      padding: 0.5rem;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    #game-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+    #game-frame {
+      width: 80%;
+      height: 600px;
+      border: none;
+      border-radius: 8px;
+    }
+    #back-button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #ff4757;
+      border: none;
+      border-radius: 4px;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #back-button:hover {
+      background-color: #e84118;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Unblocked Games Hub</h1>
+  </header>
+  <main id="main-content">
+    <section id="game-list">
+      <!-- Game cards will be injected here -->
+    </section>
+    <section id="game-container">
+      <iframe id="game-frame" src=""></iframe>
+      <button id="back-button">Back to Games</button>
+    </section>
+  </main>
+  <script>
+    const gameList = document.getElementById('game-list');
+    const gameContainer = document.getElementById('game-container');
+    const gameFrame = document.getElementById('game-frame');
+    const backButton = document.getElementById('back-button');
+
+    function displayGames(games) {
+      gameList.innerHTML = '';
+      games.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+        card.innerHTML = `
+          <img src="${game.game_image_icon}" alt="${game.game_name}">
+          <h3>${game.game_name}</h3>
+        `;
+        card.addEventListener('click', () => {
+          gameFrame.src = game.iframe;
+          gameList.style.display = 'none';
+          gameContainer.style.display = 'flex';
+        });
+        gameList.appendChild(card);
+      });
+    }
+
+    backButton.addEventListener('click', () => {
+      gameFrame.src = '';
+      gameContainer.style.display = 'none';
+      gameList.style.display = 'flex';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('https://raw.githubusercontent.com/swarmintelli/Unblocked-Games-CDN/main/games.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then(data => {
+          const games = Object.values(data); // Convert from object to array
+          displayGames(games);
+        })
+        .catch(error => {
+          console.error("Failed to load game data:", error);
+          gameList.innerHTML = "<p style='color: red;'>Failed to load game list.</p>";
+        });
+    });
+  </script>
+</body>
+</html>
