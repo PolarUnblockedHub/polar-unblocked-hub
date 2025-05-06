@@ -92,7 +92,6 @@
       background-color: var(--accent); border: none; border-radius: 4px;
       color: #ffffff; cursor: pointer;
     }
-    /* Fullscreen button styling */
     #fullscreen-toggle {
       margin-bottom: 1rem;
       padding: 0.5rem 1rem;
@@ -124,7 +123,6 @@
     const searchEl = document.getElementById('search');
     const filterFavEl = document.getElementById('filter-fav');
     const themeToggleEl = document.getElementById('theme-toggle');
-    const fullscreenToggleEl = document.getElementById('fullscreen-toggle');
     const listEl = document.getElementById('game-list');
     const containerEl = document.getElementById('game-container');
 
@@ -189,7 +187,6 @@
         containerEl.innerHTML = '';
         listEl.style.display = 'flex';
       };
-
       document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
     }
 
@@ -201,7 +198,6 @@
       }
     }
 
-    // Theme
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
@@ -212,11 +208,10 @@
       setTheme(cur === 'light' ? 'dark' : 'light');
     };
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('theme') || 'dark';
       setTheme(saved);
-      fetch('https://polarunblockedhub.github.io/cdn/')
+      fetch('https://polarunblockedhub.github.io/cdn/games.json')
         .then(res => res.json())
         .then(data => {
           allGames = Object.values(data);
