@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Load the games JSON
-const games = JSON.parse(fs.readFileSync('./games.json', 'utf8'));
+const games = JSON.parse(fs.readFileSync('./.games.json', 'utf8'));
 
 // Create the wrappers directory if it doesn't exist
 const wrappersDir = path.join(__dirname, 'wrappers');
