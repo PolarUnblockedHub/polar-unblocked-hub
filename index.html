@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Polar Unblocked Hub</title>
+  <title>Polar Unblocked Hub - Games</title>
   <style>
     :root {
       --bg-color: #1e1e1e;
@@ -105,7 +105,7 @@
 </head>
 <body>
   <header>
-    <h1>Polar Unblocked Hub</h1>
+    <h1>Polar Unblocked Hub - Games</h1>
   </header>
 
   <div id="controls">
@@ -138,8 +138,8 @@
     function saveFavs(favs) {
       localStorage.setItem(favKey, JSON.stringify(favs));
     }
-    function isFav(name) {
-      return loadFavs().includes(name);
+    function isFav(title) {
+      return loadFavs().includes(title);
     }
 
     function renderList() {
@@ -147,37 +147,37 @@
       const favs = loadFavs();
       listEl.innerHTML = '';
       allGames
-        .filter(g => (!showFavOnly || favs.includes(g.name)))
-        .filter(g => g.name.toLowerCase().includes(term))
+        .filter(g => (!showFavOnly || favs.includes(g.title)))
+        .filter(g => g.title.toLowerCase().includes(term))
         .forEach(game => {
           const card = document.createElement('div');
           card.className = 'game-card';
           card.innerHTML = `
-            <img src="${game.game_image_icon}" alt="${game.name}">
-            <h3>${game.name}</h3>
+            <img src="${game.imgSrc}" alt="${game.title}">
+            <h3>${game.title}</h3>
           `;
           const btn = document.createElement('button');
           btn.className = 'fav-btn';
-          btn.textContent = isFav(game.name) ? '★' : '☆';
+          btn.textContent = isFav(game.title) ? '★' : '☆';
           btn.onclick = e => {
             e.stopPropagation();
             let favsArr = loadFavs();
-            if (isFav(game.name)) favsArr = favsArr.filter(n => n !== game.name);
-            else favsArr.push(game.name);
+            if (isFav(game.title)) favsArr = favsArr.filter(n => n !== game.title);
+            else favsArr.push(game.title);
             saveFavs(favsArr);
             renderList();
           };
           card.appendChild(btn);
-          card.onclick = () => showGame(game.iframe);
+          card.onclick = () => showGame(game.link);
           listEl.appendChild(card);
         });
     }
 
-    function showGame(embedHtml) {
+    function showGame(link) {
       listEl.style.display = 'none';
       containerEl.style.display = 'flex';
       containerEl.innerHTML = `
-        ${embedHtml}
+        <iframe src="${link}"></iframe>
         <button id="fullscreen-toggle">Go Fullscreen</button>
         <button id="back-button">Back to Games</button>
       `;
@@ -187,6 +187,7 @@
         containerEl.innerHTML = '';
         listEl.style.display = 'flex';
       };
+
       document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
     }
 
@@ -211,10 +212,10 @@
     document.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('theme') || 'dark';
       setTheme(saved);
-      fetch('https://polarunblockedhub.github.io/cdn/games.json')
+      fetch('games.json')
         .then(res => res.json())
         .then(data => {
-          allGames = Object.values(data);
+          allGames = data;
           renderList();
         })
         .catch(err => {
